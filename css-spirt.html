@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CSS Spirt</title>
+
+    <style type="text/css">
+        .div
+        { 
+            width: 100px;
+            height: 100px;
+            background-image: url('images/timg.jpg');
+            background-repeat: no-repeat;
+            background-attachment:fixed;
+            /*background-position: -200px -120px; 这两个参数的意思是距离左边的位置和距离顶部的位置*/
+            background-position: -50% 0%;
+        }
+
+        .big-box {
+            width: 600px;
+            height: 200px;
+            background-color: gainsboro;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        /*针对常规流中block元素
+        .center-box {
+            width:30%;
+            height: 200px;
+            margin: 0 auto;
+            background-color: deepskyblue;
+            border: 1px solid black;
+        }*/
+        /*针对浮动元素*/
+        /*.center-box {
+            float: left;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            left: 50%;
+            margin-left: -100px;
+            background-color: deepskyblue;
+        }*/
+        /*针对绝对定位的元素居中1*/
+        /*.center-box {
+            width: 200px;
+            height: 200px;
+            position: absolute;/*需要将父元素设置为设置为relative或absolute，脱离文档流
+            left: 50%;
+            background-color: deepskyblue;
+            margin: -100px;
+        }*/
+        /*针对绝对定位的元素的居中2*/
+        .center-box {
+            width: 200px;
+            height: 200px;
+            background-color: deepskyblue;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            position: absolute;/*需要将父元素设置为设置为relative或absolute，脱离文档流*/
+        }
+
+        .big-box2 {
+            width: 200px;
+            height: 600px;
+            background-color: gainsboro;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        /*垂直居中的样式*/
+        .center-box2 {
+            width: 200px;
+            height: 200px;
+            background-color: deepskyblue;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            position: absolute;/*需要将父元素设置为设置为relative或absolute，脱离文档流*/
+        }
+        </style>
+    </head>
+
+    <body>
+        <!--<div></div>
+        <p><b>注释：</b>为了在 Mozilla 中实现此效果，background-attachment 属性必须设置为 "fixed"。</p>-->
+
+        <div class="big-box">
+            <div class="center-box"></div>
+        </div>
+
+        <div class="big-box2">
+            <div class="center-box2"></div>
+        </div>
+    </body>
+</html>
