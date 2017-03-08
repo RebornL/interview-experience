@@ -73,3 +73,30 @@ jsonp的原理是：动态的添加一个script标签，而且script标签的src
 
    例子[点击这个](./jsonp.html)
 
+### 11.sessionStorage和localStorage
+- localStorage有效期为永久，sessionStorage有效期为顶层窗口关闭前
+- 同源文档可以读取并修改localStorage数据，sessionStorage只允许同一个窗口下的文档访问，如通过iframe引入的同源文档。
+- Storage对象通常被当做普通javascript对象使用：通过设置属性来存取字符串值，也可以通过setItem(key, value)设置，getItem(key)读取，removeItem(key)删除，clear()删除所有数据，length表示已存储的数据项数目，key(index)返回对应索引的key
+```javascript
+localStorage.setItem('x', 1)//添加数据
+localStorage.getItem('x')//获取数据
+for(var i=0; i<localStorage.length; i++) {
+    var keyName = localStorage.key(i)
+    var value = localStorage.getItem(keyName)
+}
+
+localStorage.removeItem('x')//删除数据
+localStorage.clear()//清楚所有的数据
+```
+
+### 12.valueOf()和toString()
+两者不是一个东西，valueOf()返回对象的原始值，可以将包装器对象还原为基元类型
+```javascript
+var num = new Number(123);//Number {[[PrimitiveValue]]: 123}
+num.valueOf()//123
+```
+
+### 13.arguments
+```javascript
+var args = Array.prototype.slice.call(arguments, 0);//将传进来的参数变成数组
+```
