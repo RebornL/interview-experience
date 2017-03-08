@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+    <head>
+        <title>flex-grow</title>
+        <meta charset="UTF-8">
+        <style>
+            .big-box {
+                display: flex;
+                width: 100%;
+                height: 1000px;
+            }
+
+            .left-box {
+                width: 10%;
+                height: 100%;
+                background-color: salmon;
+            }
+
+            .right-box {
+                width: 10%;
+                height: 100%;
+                background-color: salmon;
+            }
+
+            .middle-box {
+                flex-shrink: 1;
+                background-color: skyblue;
+            }
+
+            .HolyGrail {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+
+            }
+
+            header,
+            footer {
+            flex: 1;
+            background-color: blueviolet;
+            }
+
+            .HolyGrail-body {
+            display: flex;
+            flex: 1;
+            }
+
+            .HolyGrail-content {
+            flex: 1;
+            background-color: yellowgreen;
+            }
+
+            .HolyGrail-nav, .HolyGrail-ads {
+            /* 两个边栏的宽度设为12em */
+            flex: 0 0 12em;
+            background-color: firebrick;
+            }
+
+            .HolyGrail-nav {
+            /* 导航放到最左边 */
+            order: -1;
+            background-color: indigo;
+            }
+        </style>
+    </head>
+    <body class="HolyGrail">
+        <header>header</header>
+        <div class="HolyGrail-body">
+            <main class="HolyGrail-content">main</main>
+            <nav class="HolyGrail-nav">nav</nav>
+            <aside class="HolyGrail-ads">ads</aside>
+        </div>
+        <footer>footer</footer>
+    </body>
+    <!--<body>
+        <header>Header</header>
+        <div class="big-box">
+            <div class="left-box">left</div>
+            <div class="middle-box">content</div>
+            <div class="middle-box">content</div>
+            <div class="right-box">right</div>
+        </div>
+        <footer>Footer</footer>
+    </body>-->
+</html>
