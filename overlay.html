@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 200px;
+            background-color: skyblue;
+        }
+        .overlay {
+            width: 100px;
+            height: 200px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.2)
+        }
+    </style>
+</head>
+<body>
+    <div class="box">TEST OVERLAY</div>
+    <script>
+        var flag = true;
+        var elem = document.getElementsByTagName("div")[0]
+        if(elem.addEventListener) {
+            elem.addEventListener("click", function(){
+                if(flag) {
+                    elem.className = "overlay";
+                    // elem.style.background = "rgba(0, 0, 0, 0.1)";
+                    flag = false;
+                } else {
+                    // elem.style.background = "";
+                    elem.className = "box";
+                    flag = true;
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -244,3 +244,5 @@ Event.prototype.once = function (type, handler) {
     return this;
 };
 ```
+
+### 19.遮罩点击后要自动关闭
