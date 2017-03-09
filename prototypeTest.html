@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div>
+   <input type="button" id ="button1" value="1" />
+   <input type="button" id ="button2" value="2" />
+</div>
+
+<script type="text/javascript">
+    var btn1 = document.getElementById('button1');
+    var btn2 = document.getElementById('button2');
+
+    addListener(btn1, 'click', function (event) {
+        btn1.parentNode.insertBefore(btn2, btn1);
+    });
+
+    function addListener(elem, type, handler) {
+        if (elem.addEventListener) {
+            elem.addEventListener(type, handler, false);
+            return handler;
+        } else if (elem.attachEvent) {
+            function wrapper() {
+                var event = window.event;
+                event.target = event.srcElement;
+                handler.call(elem, event);
+            }
+            elem.attachEvent('on' + type, wrapper);
+            return wrapper;
+        }
+    }
+
+</script>
+
+    <script>
+        function Shape() {
+            this.shapename = "shape"
+        }
+        function Rect() {
+            this.rectname = "rect"
+        }
+        //method 1
+        // Rect.prototype = new Shape()
+        // var rect1 = new Rect()
+        // console.log(rect1)
+
+        //method 2
+        // Rect.prototype = Shape.prototype
+        // var rect2 = new Rect()
+        // console.log(rect2)
+        // Rect.prototype.test = function() {
+        //     console.log("rect test function")
+        // }
+        // var shape1 = new Shape()
+        // console.log(shape1)
+        // shape1.test()
+
+        //method 3
+        Rect.prototype = Object.create(Shape.prototype);
+        Rect.prototype.test = function() {
+            console.log("rect test function")
+        }
+        var rect3 = new Rect()
+        console.log(rect3)
+        var shape2 = new Shape()
+        console.log(shape2)
+    </script>    
+</body>
+</html>

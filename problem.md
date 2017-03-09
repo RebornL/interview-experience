@@ -100,3 +100,147 @@ num.valueOf()//123
 ```javascript
 var args = Array.prototype.slice.call(arguments, 0);//将传进来的参数变成数组
 ```
+
+### 14.三种继承方式的优缺点
+```javascript
+function Shape() {}
+function Rect() {}
+
+//method 1
+Rect.prototype = new Shape();
+/*
+优点：1.正确设置了原型链并实现了继承；2.父类实例属性得到继承，原型链超找效率高，也能为一些属性提供默认的属性值
+缺点：1.当父类实力属性为引用类型时，不恰当的修改会导致所有的子类被修改；2.创建父类实例作为子类原型时，可能无法确定构造函数需要的合理参数，这样提供的参数继承给子类没有实际意义，当子类需要这些参数时应该在构造函数中进行初始化和设置
+*/
+
+//method 2
+Rect.prototype = Shape.protoype
+/*
+优点：1.正确设置原型链实现继承
+缺点：1.父类构造函数原型和子类相同，因此修改子类原型添加方法的同时会修改父类
+*/
+
+//method 3
+Rect.prototype = Object.create(Shape.prototype)
+/*
+优点：正确设置原型链且避免了1,2的缺点
+缺点：ES5的方法需要注意兼容性
+*/
+
+```
+方法1：
+![method1](images/method1.png)
+方法2：
+![method1](images/method2.png)
+方法3：
+![method1](images/method3.png)
+
+### 15.交换两个节点（[题目](https://github.com/qiu-deqing/FE-interview#补充代码鼠标单击button1后将button1移动到button2的后面)）
+>insertBefore既可以添加新的节点也可以交换存在的节点
+```html
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id="myList"><li>Coffee</li><li>Tea</li></ul>
+
+<p id="demo">请点击按钮向列表插入一个项目。</p>
+
+<button onclick="myFunction()">试一下</button>
+
+<script>
+function myFunction()
+{
+var newItem=document.createElement("LI")
+var textnode=document.createTextNode("Water")
+newItem.appendChild(textnode)
+
+var list=document.getElementById("myList")
+list.insertBefore(document.getElementsByTagName("LI")[1],document.getElementsByTagName("LI")[0]);
+}
+</script>
+
+</body>
+</html>
+```
+
+### 16.兼容性的事件监听
+```javascript
+function addListener(elm, type, handler) {
+  if (elm.addEventListener){
+    //如果支持addEventListener
+    elm.addEventListener(type, handler, false)
+  } else if (elm.attachEvent) {
+    function wrapper() {
+      var event = window.event;
+      event.target = event.srcElement;
+      handler.call(elm, event)
+    }
+    elm.attachEvent("on"+type, wrapper);
+    return wrapper;
+  }
+}
+```
+
+### 17.判断一个对象是不是数组？
+```javascript
+//如果浏览器支持Array.isArray()方法可以直接用
+function isArr(arr) {
+  if(typeof arr === 'object') {
+    return Object.prototype.toString.call(arr) === "[object Array]"
+  }
+  return false
+}
+```
+
+### 18.[请实现一个event类继承自此类的对象都会拥有两个方法on,off,once和trigger](https://github.com/qiu-deqing/FE-interview#请实现一个event类继承自此类的对象都会拥有两个方法onoffonce和trigger)
+```javascript
+function Event() {
+    if (!(this instanceof Event)) {
+        return new Event();
+    }
+    this._callbacks = {};
+}
+Event.prototype.on = function (type, handler) {
+    this_callbacks = this._callbacks || {};
+    this._callbacks[type] = this.callbacks[type] || [];
+    this._callbacks[type].push(handler);
+
+    return this;
+};
+
+Event.prototype.off = function (type, handler) {
+    var list = this._callbacks[type];
+
+    if (list) {
+        for (var i = list.length; i >= 0; --i) {
+            if (list[i] === handler) {
+                list.splice(i, 1);
+            }
+        }
+    }
+
+    return this;
+};
+
+Event.prototype.trigger = function (type, data) {
+    var list = this._callbacks[type];
+
+    if (list) {
+        for (var i = 0, len = list.length; i < len; ++i) {
+            list[i].call(this, data);
+        }
+    }
+};
+
+Event.prototype.once = function (type, handler) {
+    var self = this;
+
+    function wrapper() {
+        handler.apply(self, arguments);
+        self.off(type, wrapper);
+    }
+    this.on(type, wrapper);
+    return this;
+};
+```
