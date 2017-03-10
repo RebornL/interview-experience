@@ -284,3 +284,59 @@ new Foo.getName();
 new Foo().getName();   
 new new Foo().getName();
 ```
+
+### 21.事件委托
+```html
+<ul id="todo-app">
+  <li class="item">Walk the dog</li>
+  <li class="item">Pay bills</li>
+  <li class="item">Make dinner</li>
+  <li class="item">Code for one hour</li>
+  ...
+</ul>
+```
+```javascript
+document.addEventListener("DOMContentLoaded", function(){
+    let app = document.getElementById("todo-app");
+
+    app.addEventListener("click", function(){
+        if (e.target && e.target.nodeName === "LI") {
+            let item = e.target;
+            alert("you clicked on item: "+item.innerHTML);
+        }
+    })
+})
+```
+
+### 22.判断质数
+```javascript
+function isPrime(num) {
+    /*1.进行类型判断(是不是数字，以及是不是整数)
+    2.小于2的数，直接返回false
+    3.2是质数中唯一的一个偶数，其他偶数都不是质数
+    4.质数判断，用小于它的开方数进行判读即可
+    */
+    if(typeof num === "number" || !Number.isInteger(num)) {
+        //非数字和非整数
+        return false;
+    }
+    if (num < 2) {
+        return false;
+    }
+    if (num == 2) {
+        return true;
+    } else if (num % 2 === 0) {
+        //对除2以外的整数
+        return false;
+    }
+    //奇数处理
+    var sqRoot = Math.square(num);
+    for (var i = 3; i < sqRoot; i++) {
+        if (num % i === 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+```

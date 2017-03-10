@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="todo-app">
+        <li class="item">Walk the dog</li>
+        <li class="item">Pay bills</li>
+        <li class="item">Make dinner</li>
+        <li class="item">Code for one hour</li>
+
+    </ul>
+
+    <script>
+        //给数量比较大的li添加事件监听，采用事件委托机制解决
+        document.addEventListener("DOMContentLoaded", function(){
+            let app = document.getElementById("todo-app");
+
+            app.addEventListener("click", function(e){
+                console.log("e: ", e);
+                console.log("e.target: ", e.target);//e.taget指向被点击的元素
+                console.log("e.currenrTarget: ", e.currentTarget);//e.currenntTarget指向触发事件的元素
+                if (e.target && e.target.nodeName === "LI") {
+                    let item = e.target;
+                    alert("you clicked on item: "+item.innerHTML);
+                }
+            })
+        });
+    </script>
+</body>
+</html>
