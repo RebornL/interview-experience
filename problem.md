@@ -246,3 +246,41 @@ Event.prototype.once = function (type, handler) {
 ```
 
 ### 19.遮罩点击后要自动关闭
+```javascript
+$('.overlay').click(function(e){
+  if (e.target == e.currentTarget)//这样可以防止冒泡
+    closeOverlay();
+});
+```
+
+### 20.作用于和原型链的题目
+[原帖地址](https://github.com/jirengu/frontend-interview/issues/26),[解答地址](https://cnodejs.org/topic/5867d50d5eac96bb04d3e302)
+>提示：操作符的优先级
+```javascript
+function Foo() {
+    getName = function () { 
+    	console.log('1');
+    };
+    return this;
+}
+Foo.getName = function () {
+	console.log('2');
+};
+Foo.prototype.getName = function () { 
+	console.log('3');
+};
+var getName = function () { 
+	console.log('4');
+};
+function getName() { 
+	console.log(5);
+}
+
+Foo.getName();  
+getName();	
+Foo().getName(); 
+getName();  
+new Foo.getName(); 
+new Foo().getName();   
+new new Foo().getName();
+```
