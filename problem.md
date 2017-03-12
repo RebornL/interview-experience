@@ -340,3 +340,117 @@ function isPrime(num) {
     return false;
 }
 ```
+
+### 23.关于弹性布局
+```css
+display: flex;
+
+display: inline-flex;
+```
+值为flex的使弹性容器变成块级元素，inline-flex使弹性容器成为单个不可分的行内级元素（这个“单个不可分”不知道怎么去理解，摘自MDN的，如果有人懂得话，麻烦解答一下）。
+
+其他属性的介绍看[interview1](./interview1.md)中有介绍。
+[圣杯布局](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Flexible_Box_Layout/Using_CSS_flexible_boxes#圣杯布局示例)这个挺重要的，第一次面试的时候就考到了这个东西
+
+### 24.关于JavaScript的面向对象的学习
+#### 属性类型：数据属性和访问器属性
+##### 数据属性：包含了数据值，可通过其进行数据的写入和获取。
+- [[Configurable]]:定义该属性能否被delete删除然后重新赋值，值类型：true | false。注意一旦对象定义了不可配置的，就算再调用Object.defineProperty()方法也会导致在严格模式下报错。
+- [[Enumerable]]:定义该属性能否通过for-in循环返回属性，值类型：true | false
+- [[Writable]]:定义属性能否被改写，值类型：true | false
+- [[Value]]:定义属性的值
+（在Object.defineProperty中不明确指定configurable,enumerable,writable属性，其默认值都为false）
+
+##### 访问器属性：不包含数据值，通过getter和setter的方法获取和修改值
+- [[Configurable]]:同上
+- [[Enumerable]]:同上
+- [[get]]:读取该属性时调用的方法，默认值为undefined
+- [[set]]:写入该属性时调用的方法，默认值为undefined
+```javascript
+'use strict'
+var book = {
+    _yaer: 2014,//这是一个数据属性，_下划线代表着只能通过对象方法访问属性
+    edition: 1,//这是一个数据属性
+}
+//可以通过Object.defineProperty去定义数据属性和访问器属性
+//一下定义访问器属性year
+Object.defineProperty(book, "year", {
+    //对访问器属性进行修改
+    get: function() {
+        return this._year;//this指向book属性
+    },
+    set: function(newVal) {
+        if (newVal > 2014) {
+            this._yaer = newVal;
+            this.edition += (this._year - 2014);
+        }
+    }
+})
+
+book._year//2014
+book.year//undefine，访问器属性的初始值为undefined
+book._year = 2015
+book._year//2014
+book.edition//1
+book.year = 2015
+book._year//2015,这就表示访问器属性只能通过对象方法进行修改
+book.edition//2
+//还有其他的见《JavaScript高级程序设计》(第三版)P144页
+```
+#### 构造对象
+- 工厂模式：解决了创建相似对象的问题，但却没有解决对象类型识别的问题
+- 构造器函数模式：
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+    this.sayName = function() {
+        alert(this.name)
+    }
+}
+
+var person1 = new Person("person1",11);
+var person2 = new Person("person2",12);
+
+//将构造函数作为普通函数调用的话，其对象为window
+Person("test", 12)
+window.satName()//"test"
+
+```
+创建Person的实例，需要采用new操作符，这个过程有以下四步：
+    1. 创建一个新对象
+    2. 将构造函数的作用域赋给这个新对象（即this指向该新对象）
+    3. 执行构造函数中代码（即为这个新对象添加属性）
+    4. 返回新对象
+这些对象实例的constructor属性都指向Person，constructor属性一开始用来标识实例的特定类型。
+
+- 原型模式：好处也是坏处，所有实例一起共享属性和方法
+```javascript
+var Person = {}
+Person.prototype.name = "test";
+Person.prototype.sayName = function() {
+    alert(this.name);
+}
+
+var person1 = new Person();
+var person2 = new Person();
+console.log(person1.sayName === person2.sayName)//true
+//注意原型模式中，person1和person2调用的sayName都是原型上方法，而非其自身的方法
+//可以通过person1.hasOwnProperty("sayName")查看，得到false
+```
+![原型模式-摘自JavaScript高级程序设计](images/原型模式.png)
+
+利用原型模式，常常会用到hasOwnProperty()方法和in操作，结合for-in循环，可以单独遍历实例自身的属性
+还有hasPrototypeProperty()方法用来判断是使用实例自身的属性（false）还是原型上的属性（true）
+
+Object.keys()接收一个对象，返回该对象上可枚举的属性名的数组，不包含原型上的属性名
+Object.getOwnPropertyNames()，会返回实例所有属性，不管是不是可枚举的
+```javascript
+var Person = {}
+
+var person1 = new Person()
+person1.name = "test";
+person1.age = 11;
+var keys = Object.keys(person1);//["name", "age"]
+var keys = Object.keys(person1);//["constructor", "name", "age"]
+```
