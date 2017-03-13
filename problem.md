@@ -257,6 +257,7 @@ $('.overlay').click(function(e){
 ### 20.作用于和原型链的题目
 [原帖地址](https://github.com/jirengu/frontend-interview/issues/26),[解答地址](https://cnodejs.org/topic/5867d50d5eac96bb04d3e302)
 >提示：操作符的优先级
+
 ```javascript
 function Foo() {
     getName = function () { 
@@ -287,6 +288,7 @@ new new Foo().getName();
 ```
 
 ### 21.事件委托
+
 ```html
 <ul id="todo-app">
   <li class="item">Walk the dog</li>
