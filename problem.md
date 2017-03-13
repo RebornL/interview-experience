@@ -424,7 +424,7 @@ window.satName()//"test"
     4. 返回新对象
 这些对象实例的constructor属性都指向Person，constructor属性一开始用来标识实例的特定类型。
 
-- 原型模式：好处也是坏处，所有实例一起共享属性和方法
+- 原型模式：好处也是坏处，所有实例一起共享属性和方法，特别是对于引用类型
 ```javascript
 var Person = {}
 Person.prototype.name = "test";
@@ -454,3 +454,40 @@ person1.age = 11;
 var keys = Object.keys(person1);//["name", "age"]
 var keys = Object.keys(person1);//["constructor", "name", "age"]
 ```
+
+- 组合使用构造函数模式和原型模式
+所有实力属性在构造函数中定义，所有共享属性constructor和方法放在放在原型中定义
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+    this.friends = ["Ben","Mike"];
+}
+
+Person.prototype = {
+    constructor: Person,
+    sayName: function() {
+        alert(this.name)
+    }
+}
+```
+
+- 动态原型模式
+只需要构造器中执行一次，原型便可以完成初始化，之后所有实例共享原型的属性
+```javascript
+function Person(name,age) {
+    this.name = name;
+    this.age = age;
+
+    if(typeof this.sayName !== "function") {
+        Person.prototype.sayName = function() {
+            alert(this.name);
+        }
+    }
+}
+```
+
+
+### 25.关于zepto的tap事件穿透
+摘自[这篇文章](http://blog.csdn.net/angeljsl/article/details/51034955)的解释：
+> tap事件穿透就是，有多个层级上有绑定事件，最上层的绑定了tap事件，下层绑定了click事件，在执行完上层事件后会触发下层事件，进而出现事件穿透。如果下层是input标签，必穿透。究其原因：是因为zepto实现tap事件是冒泡到document上时才触发的，也就是tap事件是绑定在document上，而click事件有延时执行。
