@@ -137,6 +137,7 @@ Rect.prototype = Object.create(Shape.prototype)
 
 ### 15.交换两个节点（[题目](https://github.com/qiu-deqing/FE-interview#补充代码鼠标单击button1后将button1移动到button2的后面)）
 >insertBefore既可以添加新的节点也可以交换存在的节点
+
 ```html
 <!DOCTYPE html>
 <html>
