@@ -7,6 +7,7 @@
 
 ### 2.微信小程序上链接信息获取
 >解决方法：在Page对象中onload方法中通过参数可以获取链接中带有的信息。
+(以前做公众号开发遇到过的问题，微信浏览器的缓存问题，当你修改了代码之后，微信浏览器端可能没有什么改变。原因是微信的缓存时间相对开发的时间较长，解决可以给链接加上时间戳，让微信浏览器以为是新的网页。)
 
 ### 3.闭包的用处？
 >1. 用于获取函数内部的值；2.使得函数内部的值可以始终保存在内存中
@@ -345,11 +346,13 @@ function isPrime(num) {
 ```
 
 ### 23.关于弹性布局
+
 ```css
 display: flex;
 
 display: inline-flex;
 ```
+
 值为flex的使弹性容器变成块级元素，inline-flex使弹性容器成为单个不可分的行内级元素（这个“单个不可分”不知道怎么去理解，摘自MDN的，如果有人懂得话，麻烦解答一下）。
 
 其他属性的介绍看[interview1](./interview1.md)中有介绍。
@@ -467,6 +470,7 @@ function Person(name, age) {
     this.friends = ["Ben","Mike"];
 }
 
+//注意一下这种形式，当直接给Person.prototype={}，这相当于重新创建一个对象赋给这个原型，这就改变最初的原型对象，因此需要设置constructor属性中指向。
 Person.prototype = {
     constructor: Person,
     sayName: function() {
@@ -489,8 +493,75 @@ function Person(name,age) {
     }
 }
 ```
+- 寄生构造函数模式
+形式上跟构造函数类似，不同之处，显式的返回新的实例，有点像工厂模式。这种模式常用语特殊情况，例如不能直接修改Array的构造函数，可以这样处理
 
+```javascript
+function SpecialArray() {
+    var specialArray = new Array();
+    specialArray.push.apply(specialArray, arguments);
+    specialArray.toPipedString = function() {
+        return this.join(" | ");
+    }
+
+    return specialArray;
+}
+
+var colors = new SpecialArray("Red", "Green", "Blue");
+console.log(colors.toPipedString())//"Red | Green | Blue"
+
+colors instanceof SpecialArray//false
+colors instanceof Array//true
+```
+使用寄生构造器函数模式之后，就不能太依赖instanceof来判断实例的类型。
+
+- 稳妥构造函数模式
+这种类型比较奇葩，属性只能通过特定方法去访问，不使用new去操作获取实例。
 
 ### 25.关于zepto的tap事件穿透
 摘自[这篇文章](http://blog.csdn.net/angeljsl/article/details/51034955)的解释：
 > tap事件穿透就是，有多个层级上有绑定事件，最上层的绑定了tap事件，下层绑定了click事件，在执行完上层事件后会触发下层事件，进而出现事件穿透。如果下层是input标签，必穿透。究其原因：是因为zepto实现tap事件是冒泡到document上时才触发的，也就是tap事件是绑定在document上，而click事件有延时执行。
+
+### 26.网络协议
+OSI七层网路协议：应用层-表示层-会话层-传输层-网路层-数据链路层-物理层
+
+TCP/IP四层协议:应用层-传输层-网际层-网络接口层
+
+综合成五层协议：应用层-传输层-网络层-数据链路层-物理层
+#### OSI七层协议
+- 应用层： 为操作系统或网路应用程序提供访问网路服务的借口，应用层协议有：Telnet，FTP，HTTP，SNMP等。
+- 表示层： 解决用户语法问题。
+- 会话层： 提供包括访问验证和会话管理在内的建立和维护应用之间的通信。
+- 传输层： 处理信息，为上层提供端到端的透明的，可靠的 数据传输服务。传输层协议有TCP，UDP等。（另外这一层的数据称之为数据包，TCP叫段文，UDP叫数据报）
+- 网络层： 这一层的任务就是选择合适网间路由和交换节点，确保数据及时传送。
+- 数据链路层： 将数据封装成帧进行传输。
+- 物理层： 进行设备之间的互连。
+
+#### 五层协议
+- 实体层： 将电脑连接起来的物理手段。
+- 链接层： 确定0和1的分组方式。数据单位为帧，由标头（head）和数据（data）组成
+标头固定18个字节， 数据最短46个字节， 最长为1500字节。数据过长，就分割成多个帧进行发送。
+
+此外，这一层还涉及到Mac地址，ARP协议等等，具体详看[阮一峰的这篇文章](http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html)
+- 网络层： 路由寻址和分发
+根据IP地址，确定不同子网进行数据分发。另外由ARP协议根据IP地址确定MAC地址。
+
+- 传输层： 建立“端到端”的通信。此层常用的两个协议：UDP和TCP协议
+- 应用层： 规定应用程序的数据格式。
+
+`TCP三次握手中，SYN这个序列码，是为了保证应用层接收到的数据不会因为网络传输问题而乱序`
+
+`TCP的四次挥手，是因为TCP是全双工的，两个来回`
+
+详见[《TCP的那些事（上）》](http://coolshell.cn/articles/11564.html)和[《TCP的那些事（下）》](http://coolshell.cn/articles/11609.html)
+
+### 27.webSocket和ajax
+webSocket技术是html5技术引进的，通过HTTP的一次链接直接，搭建TCP链接，全双工，既可发送，又可接收，节省带宽。
+- 基于TCP/IP协议实现
+- 是一种全双向的通信, 具有底层socket的特点
+- 节约带宽，节省服务器资源
+- 是HTML5的技术之一，具有巨大的应用前景
+
+Ajax,即异步JavaScript和XML，是一种创建交互式网页应用的网页开发技术。通过在后台与服务器进行少量数据交换，Ajax可以使网页实现异步更新，这意味着可以在不重新加载整个网页的情况下，对网页的部分进行加载更新。
+
+       Ajax 是优点在于它在浏览器与web服务器之间使用异步数据传输（HTTP请求），不阻塞用户，核心对象是XMLHTTPRequest。通过这个对象，js可在不重新加载页面的情况下与web服务器交换数据。由于Ajax已流行这么多年，浏览器对它的兼容非常完美，并且很多成熟的框架可以直接使用。像jQuery，调用时只需一行代码，初学者甚至不需要知道什么的XHR对象就可以使用。
